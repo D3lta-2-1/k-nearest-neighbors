@@ -19,5 +19,6 @@ target("tests")
     add_files("src/*.c")
     remove_files("src/main.c")
     add_headerfiles("src/*.h")
+    set_rundir("$(projectdir)/resources")
 
 

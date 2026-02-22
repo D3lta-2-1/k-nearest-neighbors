@@ -3,18 +3,14 @@
 
 #include "image.h"
 
-typedef struct DTreeElemenet_t {
-	Image* image;
-	int split_x; //axe on which it get splitten
-	int split_y;
-} DTreeElement;
-
 typedef struct DTRee_t {
-	DTreeElement* tree;
-	int size;
+	Image** image_tree;
+	PixelCoordinate* speration_tree;
+	int image_tree_size; // because image_tree is a complete tree N = (2n - 1), speration_tree size is n - 1 = N + 1 / 2
 } DTRee;
 
-//DTRee build_tree(Image* images, int count);
+DTRee new_tree(Image* images, int count);
+void delete_tree(DTRee* tree);
 
 #endif D_TREE_H
 
