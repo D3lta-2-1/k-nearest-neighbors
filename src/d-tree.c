@@ -58,13 +58,13 @@ PixelCoordinate best_ax(Image** images, int size) {
 }
 
 int partioning(PixelCoordinate coo, Image** images, int size) {
-	if (size = 1) return 0;
+	if (size == 1) return 0;
 	int pivot = randint_in_bounds(0, size);
 	int pivot_value = get_pixel(images[pivot], coo);
 	// pivot in last
 	swap(images[pivot], images[size - 1], Image*);
 	int j = 0;
-	for (int i = 1; i < size - 1; i++) {
+	for (int i = 0; i < size - 1; i++) {
 		if (get_pixel(images[i], coo) <= pivot_value) {
 			swap(images[i], images[j], Image*);
 			j++;
@@ -87,8 +87,37 @@ void k_min_pivoting(PixelCoordinate coo, Image** images, int size, int pivot_tar
 		else if (j > pivot_target) {
 			end = j;
 		}
-		else return j;
+		else return;
 	}
 }
 
+#ifdef TESTS
+#include <utest.h>
+
+UTEST(pivoting, k_min) {
+	const int count = 10;
+	const int pivot_target = 5;
+	PixelCoordinate p = { .x = 0, .y = 0 };
+	Image* images_buffer = calloc(count, sizeof(Image));
+	for (int i = 0; i < count; i++) {
+		images_buffer[i].pixels[p.x][p.y] = count - 1 - i;
+	}
+
+	Image** images_ref = malloc(count * sizeof(Image*));
+	for (int i = 0; i < count; i++) {
+		images_ref[i] = &images_buffer[i];
+	}
+
+	k_min_pivoting(p, images_ref, count, pivot_target);
+
+	for (int i = 0; i < pivot_target; i++) {
+		ASSERT_LE(get_pixel(images_ref[i], p), get_pixel(images_ref[pivot_target], p));
+	}
+
+	for (int i = pivot_target + 1; i < count; i++) {
+		ASSERT_GE(get_pixel(images_ref[i], p), get_pixel(images_ref[pivot_target], p));
+	}
+}
+
+#endif
 

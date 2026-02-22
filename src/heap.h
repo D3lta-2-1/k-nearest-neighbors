@@ -17,21 +17,24 @@ typedef struct BinaryHeap_t {
 // create a new binary heap with a fixed capacity, overfilling will trigger an assertion
 BinaryHeap new_binary_heap(int n);
 
+// release a heap
+void delete_heap(BinaryHeap* heap);
+
 // return weather or not the heap is empty
-bool is_empty(BinaryHeap* heap);
-bool is_full(BinaryHeap* heap);
+bool heap_is_empty(BinaryHeap* heap);
+bool heap_is_full(BinaryHeap* heap);
 
 // insert an element 
-void insert(BinaryHeap* heap, int p, int v);
+void heap_insert(BinaryHeap* heap, int p, int v);
 
 // get the element with the largest priority without removing it from the heap, assert if empty
-HeapElement peek(BinaryHeap* heap);
+HeapElement heap_peek(BinaryHeap* heap);
 
 // remove an element from the heap
-void clear_first(BinaryHeap* heap);
+void heap_clear_first(BinaryHeap* heap);
 
 // get and remove from the heap an element
-HeapElement get(BinaryHeap* heap);
+HeapElement heap_get(BinaryHeap* heap);
 
 #endif TAS_H
 
