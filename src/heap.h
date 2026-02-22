@@ -1,10 +1,11 @@
 #ifndef TAS_H
 #define TAS_H
 #include <stdbool.h>
+#include "image.h"
 
 typedef struct HeapElement_t {
 	int priority;
-	int value;
+	Image* value;
 } HeapElement;
 
 typedef struct BinaryHeap_t {
@@ -25,13 +26,16 @@ bool heap_is_empty(BinaryHeap* heap);
 bool heap_is_full(BinaryHeap* heap);
 
 // insert an element 
-void heap_insert(BinaryHeap* heap, int p, int v);
+void heap_insert(BinaryHeap* heap, int p, Image* v);
 
 // get the element with the largest priority without removing it from the heap, assert if empty
 HeapElement heap_peek(BinaryHeap* heap);
 
 // remove an element from the heap
 void heap_clear_first(BinaryHeap* heap);
+
+//empty the heap
+void heap_clear(BinaryHeap* heap);
 
 // get and remove from the heap an element
 HeapElement heap_get(BinaryHeap* heap);

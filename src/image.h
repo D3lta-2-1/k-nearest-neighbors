@@ -20,6 +20,6 @@ void print_image_number(Image* img);
 void print_image_threshold(Image* img, uint8_t threshold);
 void print_image_degrade(Image* img);
 uint8_t get_pixel(Image* img, PixelCoordinate c);
-void image_iter(Image* image, void(*fn)(PixelCoordinate, void*), void* data);
+int image_euclid_squared(Image* im1, Image* im2);
 
 #endif IMAGE_H

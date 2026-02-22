@@ -63,7 +63,7 @@ bool heap_is_full(BinaryHeap* heap) {
 	return heap->capacity == heap->size;
 }
 
-void heap_insert(BinaryHeap* heap, int p, int v) {
+void heap_insert(BinaryHeap* heap, int p, Image* v) {
 	assert(!heap_is_full(heap) && "heap full");
 	HeapElement e = { .priority = p, .value = v };
 	heap->elements[heap->size] = e;
@@ -80,6 +80,10 @@ void heap_clear_first(BinaryHeap* heap) {
 	heap_swap(heap, 0, last_element(heap));
 	heap->size--;
 	shift_down(heap, 0);
+}
+
+void heap_clear(BinaryHeap* heap) {
+	heap->size = 0;
 }
 
 HeapElement heap_get(BinaryHeap* heap) {
@@ -100,39 +104,35 @@ UTEST_F_TEARDOWN(BinaryHeap_t) {
 }
 
 UTEST_F(BinaryHeap_t, insertion) {
-	heap_insert(utest_fixture, 5, 1);
-	heap_insert(utest_fixture, 4, 2);
-	heap_insert(utest_fixture, 3, 3);
-	heap_insert(utest_fixture, 2, 1);
+	heap_insert(utest_fixture, 5, NULL);
+	heap_insert(utest_fixture, 4, NULL);
+	heap_insert(utest_fixture, 3, NULL);
+	heap_insert(utest_fixture, 2, NULL);
 	ASSERT_TRUE(heap_is_full(utest_fixture));
 }
 
 UTEST_F(BinaryHeap_t, get) {
-	heap_insert(utest_fixture, 5, 1);
-	heap_insert(utest_fixture, 3, 2);
-	heap_insert(utest_fixture, 4, 3);
-	heap_insert(utest_fixture, 7, 4);
+	heap_insert(utest_fixture, 5, NULL);
+	heap_insert(utest_fixture, 3, NULL);
+	heap_insert(utest_fixture, 4, NULL);
+	heap_insert(utest_fixture, 7, NULL);
 
 	ASSERT_EQ(utest_fixture->size, 4);
 
 	HeapElement first = heap_get(utest_fixture);
 	ASSERT_EQ(first.priority, 7);
-	ASSERT_EQ(first.value, 4);
 	ASSERT_EQ(utest_fixture->size, 3);
 
 	HeapElement second = heap_get(utest_fixture);
 	ASSERT_EQ(second.priority, 5);
-	ASSERT_EQ(second.value, 1);
 	ASSERT_EQ(utest_fixture->size, 2);
 
 	HeapElement third = heap_get(utest_fixture);
 	ASSERT_EQ(third.priority, 4);
-	ASSERT_EQ(third.value, 3);
 	ASSERT_EQ(utest_fixture->size, 1);
 
 	HeapElement last = heap_get(utest_fixture);
 	ASSERT_EQ(last.priority, 3);
-	ASSERT_EQ(last.value, 2);
 	ASSERT_TRUE(heap_is_empty(utest_fixture));
 }
 

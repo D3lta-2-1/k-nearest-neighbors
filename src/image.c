@@ -154,11 +154,13 @@ uint8_t get_pixel(Image* img, PixelCoordinate c) {
     return img->pixels[c.x][c.x];
 }
 
-void image_iter(Image* image, void(*fn)(PixelCoordinate, void*), void* data) {
+int image_euclid_squared(Image* im1, Image* im2) {
+    int acc = 0;
     for (int i = 0; i < COTE_IMAGE; i++) {
         for (int j = 0; j < COTE_IMAGE; j++) {
-            PixelCoordinate c = { i, j };
-            fn(c, data);
+            int v = (int)im1->pixels[i][j] - (int)im2->pixels[i][j];
+            acc += v * v;
         }
     }
+    return acc;
 }

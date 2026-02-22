@@ -2,7 +2,7 @@
 #include "utilities.h"
 #include  <math.h>
 
-#define STD_ECHANTILLION_SIZE 100
+#define STD_ECHANTILLION_SIZE 1000
 
 float mean(PixelCoordinate coo, Image** images, int size) {
 	int sum = 0;
@@ -193,6 +193,58 @@ void delete_tree(DTRee* tree) {
 	free(tree->image_tree);
 	free(tree->speration_tree);
 }
+
+void try_add_to_heap(DTRee* tree, BinaryHeap* heap, Image* point, Image* current) {
+	int distance = image_euclid_squared(point, current);
+	if (!heap_is_full(heap)) {
+		heap_insert(heap, distance, current);
+	}
+	else {
+		HeapElement max = heap_peek(heap);
+		if (max.priority > distance) {
+			heap_clear_first(heap);
+			heap_insert(heap, distance, current);
+		}
+	}
+}
+
+void explore(DTRee* tree, BinaryHeap* heap, Image* point, int pos) {
+
+	if (pos >= tree->image_tree_size) return; // this child doesn't exist
+	
+	Image* current = tree->image_tree[pos];
+	if (pos >= tree->image_tree_size / 2) { //leaf, theorically the bottom cas would handle it...
+		try_add_to_heap(tree, heap, point, current);
+	}
+	else {
+		PixelCoordinate axe = tree->speration_tree[pos];
+
+		int first;
+		int second;
+		if (get_pixel(point, axe) < get_pixel(current, axe)) {
+			first = left_child(pos);
+			second = right_child(pos);
+		}
+		else {
+			first = right_child(pos);
+			second = left_child(pos);
+		}
+
+		explore(tree, heap, point, first);
+		if (heap_is_full(heap)) { // stop exploration
+			HeapElement max = heap_peek(heap);
+			if (max.priority < abs(get_pixel(point, axe) - get_pixel(current, axe))) return;
+		}
+		try_add_to_heap(tree, heap, point, current);
+		explore(tree, heap, point, second);
+	}
+}
+
+void dtree_find_closest(DTRee* tree, BinaryHeap* heap, Image* point) {
+	heap_clear(heap);
+	explore(tree, heap, point, 0);
+}
+
 
 #ifdef TESTS
 #include <utest.h>

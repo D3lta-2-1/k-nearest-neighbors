@@ -2,6 +2,7 @@
 #define D_TREE_H
 
 #include "image.h"
+#include "heap.h"
 
 typedef struct DTRee_t {
 	Image** image_tree;
@@ -11,6 +12,7 @@ typedef struct DTRee_t {
 
 DTRee new_tree(Image* images, int count);
 void delete_tree(DTRee* tree);
+void dtree_find_closest(DTRee* tree, BinaryHeap* heap, Image* point);
 
 #endif D_TREE_H
 
