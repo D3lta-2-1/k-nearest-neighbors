@@ -213,7 +213,7 @@ void explore(DTRee* tree, BinaryHeap* heap, Image* point, int pos) {
 	if (pos >= tree->image_tree_size) return; // this child doesn't exist
 	
 	Image* current = tree->image_tree[pos];
-	if (pos >= tree->image_tree_size / 2) { //leaf, theorically the bottom cas would handle it...
+	if (pos >= tree->image_tree_size / 2) {
 		try_add_to_heap(tree, heap, point, current);
 	}
 	else {
@@ -231,11 +231,13 @@ void explore(DTRee* tree, BinaryHeap* heap, Image* point, int pos) {
 		}
 
 		explore(tree, heap, point, first);
+		try_add_to_heap(tree, heap, point, current);
 		if (heap_is_full(heap)) { // stop exploration
 			HeapElement max = heap_peek(heap);
-			if (max.priority < abs(get_pixel(point, axe) - get_pixel(current, axe))) return;
+			int distance = (int)get_pixel(point, axe) - (int)get_pixel(current, axe);
+			if (distance * distance > max.priority) return;
 		}
-		try_add_to_heap(tree, heap, point, current);
+		
 		explore(tree, heap, point, second);
 	}
 }
