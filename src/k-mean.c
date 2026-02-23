@@ -24,7 +24,7 @@ void classify(Image* images, int n, Image* barycenters, int k, int* output) {
 
 void compute_berycenter(Image* images, int* classes, int n, int k, Image* barycenters) {
 	for (int i = 0; i < k; i++) {
-		barycenters[i].label = k; // it's implemented, it's better than leaving it empty...
+		//barycenters[i].label = k; // it's implemented, it's better than leaving it empty...
 
 		// init vector
 		int pixels[COTE_IMAGE][COTE_IMAGE];
