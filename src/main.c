@@ -2,7 +2,9 @@
 #include "image.h"
 #include "heap.h"
 #include "d-tree.h"
+#include "k-mean.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <time.h>
 
 int count_label(BinaryHeap* heap, int label) {
@@ -29,6 +31,8 @@ int most_present_value(BinaryHeap* heap) {
 }
 
 int main() {
+    srand(54654);
+
     int nb_training;
 
     Image* images_training = read_images("images_entr", "etiquettes_entr", &nb_training);
@@ -49,13 +53,34 @@ int main() {
     printf("la premiere entree est: %i\n", images_training[0].label);
     print_image_threshold(&images_training[0], 127);
 
+    printf("demarage de k moyenne\n");
+
+    int* classes = k_mean(10, images_training, nb_training, 10);
+    int** occ = count_occ(images_training, classes, 10, 10);
+
+    for (int j = 0; j < 10; j++) {
+        for (int i = 0; i < 10; i++) {
+            int v = occ[i][j];
+            if (v < 10) printf(" ");
+            if (v < 100) printf(" ");
+            printf("%i ", v);
+        }
+        printf("\n");
+    }
+
+    free(classes);
+    for (int i = 0; i < 10; i++) {
+        free(occ[i]);
+    }
+    free(occ);
+
+    printf("demarage de k plus proche voisins\n");
     int result[10][10];
     for (int i = 0; i < 10; i++) {
         for (int j = 0; j < 10; j++) {
             result[i][j] = 0;
         }
     }
-
 
     clock_t building_start = clock();
     DTRee tree = new_tree(images_training, nb_training);
@@ -73,6 +98,8 @@ int main() {
 
     float second = (float)(clock() - start) / CLOCKS_PER_SEC;
     printf("image recognized in %f s\n", second);
+    delete_tree(&tree);
+    delete_heap(&heap);
 
     for (int j = 0; j < 10; j++) {
         for (int i = 0; i < 10; i++) {
